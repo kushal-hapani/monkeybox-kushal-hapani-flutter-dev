@@ -1,0 +1,1 @@
+enum ExersiceOptions { edit, delete }

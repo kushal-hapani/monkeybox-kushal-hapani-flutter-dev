@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:workout_routines_app/model/user_exercise_model.dart';
 
 import '../../../utils/utils.dart';
 
 class WorkoutTileWidget extends StatelessWidget {
-  final int index;
-  const WorkoutTileWidget({super.key, required this.index});
+  final UserExerciseModel userExercise;
+  const WorkoutTileWidget({
+    super.key,
+    required this.userExercise,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +19,9 @@ class WorkoutTileWidget extends StatelessWidget {
       ),
       elevation: 0.1,
       child: ListTile(
-        title: Text("Workout $index"),
-        subtitle: const Text(
-          "5 exercise, 7 sets",
+        title: Text(userExercise.workOutName),
+        subtitle: Text(
+          "${userExercise.exerciseId.length} exercise",
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: getSizeWidth(context, 4),

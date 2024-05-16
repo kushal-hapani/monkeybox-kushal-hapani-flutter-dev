@@ -18,3 +18,39 @@ extension DoubleExtension on double {
     return SizedBox(width: (this * (MediaQuery.of(context).size.width)) / 100);
   }
 }
+
+extension AddSpacing on List<Widget> {
+  List<Widget> addHSpacing(double spacing) {
+    final latestChildren = <Widget>[];
+
+    for (int i = 0; i < length; i++) {
+      latestChildren.add(this[i]);
+      if (i == length - 1) continue;
+      latestChildren.add(SizedBox(
+        width: spacing,
+      ));
+    }
+
+    return latestChildren;
+  }
+
+  List<Widget> addVSpacing(double spacing) {
+    final latestChildren = <Widget>[];
+
+    for (int i = 0; i < length; i++) {
+      latestChildren.add(this[i]);
+      if (i == length - 1) continue;
+      latestChildren.add(SizedBox(
+        height: spacing,
+      ));
+    }
+
+    return latestChildren;
+  }
+}
+
+extension StringCapitalize on String {
+  String capitalize() {
+    return isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
+  }
+}

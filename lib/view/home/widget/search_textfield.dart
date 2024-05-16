@@ -5,47 +5,48 @@ import 'package:workout_routines_app/gen/assets.gen.dart';
 import '../../../utils/utils.dart';
 
 class SearchTextfield extends StatelessWidget {
+  final TextEditingController controller;
+  final Function(String?) onChange;
   const SearchTextfield({
     super.key,
+    required this.controller,
+    required this.onChange,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(50),
-        border: Border.all(
-          color: AppColor.yellow,
+    return TextField(
+      controller: controller,
+      onChanged: onChange,
+      decoration: InputDecoration(
+        fillColor: AppColor.white,
+        filled: true,
+        hintText: "Search Workout...",
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: getSizeWidth(context, 4),
         ),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: getSizeWidth(context, 4),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
+        border: outlinedInputBorder(),
+        focusedBorder: outlinedInputBorder(),
+        enabledBorder: outlinedInputBorder(),
+        prefixIcon: IconButton(
+          onPressed: null,
+          icon: SvgPicture.asset(
             Assets.images.search,
             height: 24,
             width: 24,
           ),
-
-          2.0.toHSB(context),
-
-          //
-          const Text(
-            "Search Routines",
-            style: TextStyle(
-                color: AppColor.grey1,
-                fontWeight: FontWeight.w400,
-                fontSize: 16),
-          )
-        ],
+        ),
       ),
     );
   }
+}
+
+OutlineInputBorder outlinedInputBorder({double radius = 50}) {
+  return OutlineInputBorder(
+    borderRadius: BorderRadius.circular(radius),
+    borderSide: const BorderSide(
+      color: AppColor.yellow,
+    ),
+  );
 }
