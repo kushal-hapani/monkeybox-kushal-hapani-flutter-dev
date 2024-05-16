@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:workout_routines_app/utils/utils.dart';
+import 'package:workout_routines_app/widget/app_button.dart';
 
 import '../../../state/exercise/model/exercise_model.dart';
-import '../../../utils/utils.dart';
-import '../../../widget/app_button.dart';
 
-class EquipmentsFilterBottomSheet extends HookWidget {
+class CategoryFilterBottomSheet extends HookWidget {
   final List<String> selectedId;
-  final List<Equipments> equipmentsList;
+  final List<Categories> categoryList;
 
-  const EquipmentsFilterBottomSheet({
+  const CategoryFilterBottomSheet({
     super.key,
     required this.selectedId,
-    required this.equipmentsList,
+    required this.categoryList,
   });
 
   @override
@@ -39,7 +39,7 @@ class EquipmentsFilterBottomSheet extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                "Equipments",
+                "Categories",
                 style: TextStyle(
                   color: AppColor.black,
                   fontSize: 18,
@@ -61,11 +61,11 @@ class EquipmentsFilterBottomSheet extends HookWidget {
           //
           Expanded(
             child: ListView.builder(
-              itemCount: equipmentsList.length,
+              itemCount: categoryList.length,
               padding: EdgeInsets.zero,
               shrinkWrap: true,
               itemBuilder: (_, index) {
-                final equipment = equipmentsList[index];
+                final category = categoryList[index];
 
                 return Card(
                   color: AppColor.white,
@@ -75,15 +75,15 @@ class EquipmentsFilterBottomSheet extends HookWidget {
                   elevation: 0.5,
                   child: ListTile(
                     onTap: () {
-                      if (selectedId.value.contains(equipment.id!)) {
+                      if (selectedId.value.contains(category.id!)) {
                         selectedId.value = List.from(selectedId.value)
-                          ..remove(equipment.id!);
+                          ..remove(category.id!);
                       } else {
                         selectedId.value = List.from(selectedId.value)
-                          ..add(equipment.id!);
+                          ..add(category.id!);
                       }
                     },
-                    title: Text(equipment.name!),
+                    title: Text(category.name!),
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: getSizeWidth(context, 4),
                     ),
@@ -91,15 +91,15 @@ class EquipmentsFilterBottomSheet extends HookWidget {
                       height: 24,
                       width: 24,
                       decoration: BoxDecoration(
-                        color: selectedId.value.contains(equipment.id!)
+                        color: selectedId.value.contains(category.id!)
                             ? AppColor.darkYellow
                             : null,
-                        border: selectedId.value.contains(equipment.id!)
+                        border: selectedId.value.contains(category.id!)
                             ? Border.all(color: AppColor.darkYellow)
                             : Border.all(color: AppColor.grey2),
                         shape: BoxShape.circle,
                       ),
-                      child: selectedId.value.contains(equipment.id!)
+                      child: selectedId.value.contains(category.id!)
                           ? const Icon(
                               Icons.check,
                               color: AppColor.white,

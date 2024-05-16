@@ -310,6 +310,12 @@ class ExerciseData {
     }
     return data;
   }
+
+  @override
+  bool operator ==(covariant ExerciseData other) => id == other.id;
+
+  @override
+  int get hashCode => Object.hashAll([id]);
 }
 
 class Equipments {
@@ -491,6 +497,39 @@ class MainMuscles {
     }
     return data;
   }
+
+  @override
+  bool operator ==(covariant MainMuscles other) =>
+      id == other.id &&
+      description == other.description &&
+      isAccessoryMuscle == other.isAccessoryMuscle &&
+      isCore == other.isCore &&
+      isFront == other.isFront &&
+      isPull == other.isPull &&
+      isPush == other.isPush &&
+      isUpperBody == other.isUpperBody &&
+      name == other.name &&
+      utilityPercentage == other.utilityPercentage &&
+      referenceId == other.referenceId &&
+      thumbImage == other.thumbImage &&
+      imageImage == other.imageImage;
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        description,
+        isAccessoryMuscle,
+        isCore,
+        isFront,
+        isPull,
+        isPush,
+        isUpperBody,
+        name,
+        utilityPercentage,
+        referenceId,
+        thumbImage,
+        imageImage,
+      ]);
 }
 
 class ExerciseMainMuscleGroups {
@@ -608,6 +647,41 @@ class SecondaryMuscles {
     }
     return data;
   }
+
+  @override
+  bool operator ==(covariant SecondaryMuscles other) =>
+      id == other.id &&
+      description == other.description &&
+      isAccessoryMuscle == other.isAccessoryMuscle &&
+      isCore == other.isCore &&
+      isFront == other.isFront &&
+      isPull == other.isPull &&
+      isPush == other.isPush &&
+      isUpperBody == other.isUpperBody &&
+      name == other.name &&
+      utilityPercentage == other.utilityPercentage &&
+      referenceId == other.referenceId &&
+      thumbImage == other.thumbImage &&
+      imageImage == other.imageImage &&
+      createdAt == other.createdAt;
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        description,
+        isAccessoryMuscle,
+        isCore,
+        isFront,
+        isPull,
+        isPush,
+        isUpperBody,
+        name,
+        utilityPercentage,
+        referenceId,
+        thumbImage,
+        imageImage,
+        createdAt,
+      ]);
 }
 
 class Categories {
@@ -654,6 +728,21 @@ class Categories {
     }
     return data;
   }
+
+  @override
+  bool operator ==(covariant Categories other) =>
+      id == other.id &&
+      name == other.name &&
+      referenceId == other.referenceId &&
+      thumbImage == other.thumbImage;
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        name,
+        referenceId,
+        thumbImage,
+      ]);
 }
 
 class ExerciseExerciseCategories {

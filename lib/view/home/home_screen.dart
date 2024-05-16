@@ -42,7 +42,13 @@ class HomeScreen extends HookConsumerWidget {
               ValueListenableBuilder(
                 valueListenable: userExercises.listenable(),
                 builder: (context, box, child) {
-                  final totalWorkout = box.values.length;
+                  final totalWorkout = box.values
+                      .toList()
+                      .where((element) => element.workOutName
+                          .toLowerCase()
+                          .contains(searchValue.value.toLowerCase()))
+                      .toList()
+                      .length;
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -11,7 +11,10 @@ import 'package:workout_routines_app/state/edit_exercise/edit_exercise_provider.
 import 'package:workout_routines_app/state/exercise/model/exercise_model.dart';
 import 'package:workout_routines_app/state/exercise/provider/exercise_provider.dart';
 import 'package:workout_routines_app/utils/utils.dart';
+import 'package:workout_routines_app/view/exercise/widget/category_filter_bottom_sheet.dart';
 import 'package:workout_routines_app/view/exercise/widget/equipments_filter_bottom_sheet.dart';
+import 'package:workout_routines_app/view/exercise/widget/main_muscle_bottom_sheet.dart';
+import 'package:workout_routines_app/view/exercise/widget/secondary_muscle_bottom_sheet.dart';
 import 'package:workout_routines_app/view/home/widget/search_textfield.dart';
 
 class EditExerciseScreen extends HookConsumerWidget {
@@ -30,15 +33,23 @@ class EditExerciseScreen extends HookConsumerWidget {
     Box<UserExerciseModel> userExercises =
         Hive.box(ConstantString.userExerciseBox);
 
+    final filterExerciseData = useState(<ExerciseData>[]);
+
     final searchTextController = useTextEditingController();
     final isFiltered = useState(false);
     final showFilters = useState(false);
     final searchResult = useState(<ExerciseData>[]);
     final selectedId = useState(userExercise.exerciseId);
 
+    final selectedEqIds = useState(<String>[]);
+    final selectedMMIds = useState(<String>[]);
+    final selectedSMIds = useState(<String>[]);
+    final selectedCIds = useState(<String>[]);
+
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(exerciseProvider.notifier).getExerciseData();
+        filterExerciseData.value = ref.watch(exerciseProvider).exerciseData;
       });
 
       return;
@@ -51,7 +62,7 @@ class EditExerciseScreen extends HookConsumerWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         surfaceTintColor: AppColor.transparent,
         title: const Text(
-          "Add exercise",
+          "Edit exercise",
           style: TextStyle(
             color: AppColor.black,
             fontSize: 20,
@@ -119,46 +130,129 @@ class EditExerciseScreen extends HookConsumerWidget {
                         buildFilterChips(
                           context,
                           onTap: () async {
-                            final equipments =
-                                getEquipmentsList(exerciseData: exerciseData);
+                            final equipments = getEquipmentsList(
+                              exerciseData: exerciseData,
+                            );
 
                             final result =
                                 await showModalBottomSheet<List<String>>(
                               context: context,
                               builder: (context) {
                                 return EquipmentsFilterBottomSheet(
-                                  selectedId: const [],
+                                  selectedId: selectedEqIds.value,
                                   equipmentsList: equipments,
                                 );
                               },
                             );
 
                             if (result == null) return;
-                            if (result.isEmpty) return;
+                            selectedEqIds.value = result;
 
-                            searchResult.value = getFilteredList(
+                            filterExerciseData.value = await getFilteredList(
                               exerciseData: exerciseData,
-                              filteredData: searchResult.value,
-                              selectedId: result,
+                              filteredData: filterExerciseData.value,
+                              selectedEqId: selectedEqIds.value,
+                              selectedCId: selectedCIds.value,
+                              selectedMMId: selectedMMIds.value,
+                              selectedSMId: selectedSMIds.value,
                             );
-
-                            isFiltered.value = true;
                           },
                           title: "Equipments",
                         ),
                         buildFilterChips(
                           context,
-                          onTap: () {},
+                          onTap: () async {
+                            final mainMuscles = getMainMuscleList(
+                              exerciseData: exerciseData,
+                            );
+
+                            final result =
+                                await showModalBottomSheet<List<String>>(
+                              context: context,
+                              builder: (context) {
+                                return MainMuscleFilterBottomSheet(
+                                  selectedId: selectedMMIds.value,
+                                  mainMusclesList: mainMuscles,
+                                );
+                              },
+                            );
+
+                            if (result == null) return;
+                            selectedMMIds.value = result;
+
+                            filterExerciseData.value = await getFilteredList(
+                              exerciseData: exerciseData,
+                              filteredData: filterExerciseData.value,
+                              selectedEqId: selectedEqIds.value,
+                              selectedCId: selectedCIds.value,
+                              selectedMMId: selectedMMIds.value,
+                              selectedSMId: selectedSMIds.value,
+                            );
+                          },
                           title: "Main muscle",
                         ),
                         buildFilterChips(
                           context,
-                          onTap: () {},
+                          onTap: () async {
+                            final secondaryMuscle = getSecondaryMuscles(
+                              exerciseData: exerciseData,
+                            );
+
+                            final result =
+                                await showModalBottomSheet<List<String>>(
+                              context: context,
+                              builder: (context) {
+                                return SecondaryMuscleFilterBottomSheet(
+                                  selectedId: selectedSMIds.value,
+                                  secondaryMusclesList: secondaryMuscle,
+                                );
+                              },
+                            );
+
+                            if (result == null) return;
+                            selectedSMIds.value = result;
+
+                            filterExerciseData.value = await getFilteredList(
+                              exerciseData: exerciseData,
+                              filteredData: filterExerciseData.value,
+                              selectedEqId: selectedEqIds.value,
+                              selectedCId: selectedCIds.value,
+                              selectedMMId: selectedMMIds.value,
+                              selectedSMId: selectedSMIds.value,
+                            );
+                          },
                           title: "Secondary muscle",
                         ),
                         buildFilterChips(
                           context,
-                          onTap: () {},
+                          onTap: () async {
+                            final category = getCategorys(
+                              exerciseData: exerciseData,
+                            );
+
+                            final result =
+                                await showModalBottomSheet<List<String>>(
+                              context: context,
+                              builder: (context) {
+                                return CategoryFilterBottomSheet(
+                                  selectedId: selectedCIds.value,
+                                  categoryList: category,
+                                );
+                              },
+                            );
+
+                            if (result == null) return;
+                            selectedCIds.value = result;
+
+                            filterExerciseData.value = await getFilteredList(
+                              exerciseData: exerciseData,
+                              filteredData: filterExerciseData.value,
+                              selectedEqId: selectedEqIds.value,
+                              selectedCId: selectedCIds.value,
+                              selectedMMId: selectedMMIds.value,
+                              selectedSMId: selectedSMIds.value,
+                            );
+                          },
                           title: "Categories",
                         ),
                       ].addHSpacing(getSizeWidth(context, 2)),
@@ -170,7 +264,7 @@ class EditExerciseScreen extends HookConsumerWidget {
                   child: ListView.builder(
                     itemCount: isFiltered.value
                         ? searchResult.value.length
-                        : exerciseData.length,
+                        : filterExerciseData.value.length,
                     shrinkWrap: true,
                     padding: EdgeInsets.only(
                         bottom: getSizeHeight(context, 2),
@@ -180,7 +274,7 @@ class EditExerciseScreen extends HookConsumerWidget {
                     itemBuilder: (context, index) {
                       final exercise = isFiltered.value
                           ? searchResult.value[index]
-                          : exerciseData[index];
+                          : filterExerciseData.value[index];
                       return Card(
                         color: AppColor.white,
                         shape: RoundedRectangleBorder(
@@ -315,7 +409,6 @@ class EditExerciseScreen extends HookConsumerWidget {
     for (final exercise in exerciseData) {
       for (final equipment in exercise.equipments!) {
         if (equipments.contains(equipment)) {
-          "Here".log();
           continue;
         } else {
           equipments.add(equipment);
@@ -326,30 +419,129 @@ class EditExerciseScreen extends HookConsumerWidget {
     return equipments;
   }
 
-  List<ExerciseData> getFilteredList({
+  List<MainMuscles> getMainMuscleList({
     required List<ExerciseData> exerciseData,
-    required List<ExerciseData> filteredData,
-    required List<String> selectedId,
   }) {
-    List<ExerciseData> finalExerciseData = <ExerciseData>[];
+    final mainMuscles = <MainMuscles>[];
 
-    if (filteredData.isEmpty) {
-      for (final exercise in exerciseData) {
-        for (final equipment in exercise.equipments!) {
-          if (selectedId.contains(equipment.id)) {
-            finalExerciseData.add(exercise);
-          }
+    for (final exercise in exerciseData) {
+      for (final mainMuscle in exercise.mainMuscles!) {
+        if (mainMuscles.contains(mainMuscle)) {
+          continue;
+        } else {
+          mainMuscles.add(mainMuscle);
         }
       }
-    } else {
-      for (final exercise in filteredData) {
+    }
+
+    return mainMuscles;
+  }
+
+  List<SecondaryMuscles> getSecondaryMuscles({
+    required List<ExerciseData> exerciseData,
+  }) {
+    final secondaryMuscles = <SecondaryMuscles>[];
+
+    for (final exercise in exerciseData) {
+      for (final secondaryMuscle in exercise.secondaryMuscles!) {
+        if (secondaryMuscles.contains(secondaryMuscle)) {
+          continue;
+        } else {
+          secondaryMuscles.add(secondaryMuscle);
+        }
+      }
+    }
+
+    return secondaryMuscles;
+  }
+
+  List<Categories> getCategorys({
+    required List<ExerciseData> exerciseData,
+  }) {
+    final categories = <Categories>[];
+
+    for (final exercise in exerciseData) {
+      for (final categorie in exercise.categories!) {
+        if (categories.contains(categorie)) {
+          continue;
+        } else {
+          categories.add(categorie);
+        }
+      }
+    }
+
+    return categories;
+  }
+
+  Future<List<ExerciseData>> getFilteredList({
+    required List<ExerciseData> exerciseData,
+    required List<ExerciseData> filteredData,
+    required List<String> selectedEqId,
+    required List<String> selectedMMId,
+    required List<String> selectedSMId,
+    required List<String> selectedCId,
+  }) async {
+    List<ExerciseData> finalExerciseData = <ExerciseData>[];
+
+    if (selectedEqId.isNotEmpty) {
+      for (final exercise in exerciseData) {
         for (final equipment in exercise.equipments!) {
-          if (selectedId.contains(equipment.id)) {
+          if (selectedEqId.contains(equipment.id)) {
             finalExerciseData.add(exercise);
           }
         }
       }
     }
+
+    await Future.delayed(const Duration(microseconds: 100));
+
+    if (selectedMMId.isNotEmpty) {
+      for (final exercise in exerciseData) {
+        for (final mainMuscles in exercise.mainMuscles!) {
+          if (selectedMMId.contains(mainMuscles.id)) {
+            if (!finalExerciseData.contains(exercise)) {
+              finalExerciseData.add(exercise);
+            }
+          }
+        }
+      }
+    }
+
+    await Future.delayed(const Duration(microseconds: 100));
+
+    if (selectedSMId.isNotEmpty) {
+      for (final exercise in exerciseData) {
+        for (final secMuscles in exercise.secondaryMuscles!) {
+          if (selectedSMId.contains(secMuscles.id)) {
+            if (!finalExerciseData.contains(exercise)) {
+              finalExerciseData.add(exercise);
+            }
+          }
+        }
+      }
+    }
+
+    await Future.delayed(const Duration(microseconds: 100));
+
+    if (selectedCId.isNotEmpty) {
+      for (final exercise in exerciseData) {
+        for (final category in exercise.categories!) {
+          if (selectedCId.contains(category.id)) {
+            if (!finalExerciseData.contains(exercise)) {
+              finalExerciseData.add(exercise);
+            }
+          }
+        }
+      }
+    }
+
+    if (selectedCId.isEmpty &&
+        selectedEqId.isEmpty &&
+        selectedMMId.isEmpty &&
+        selectedSMId.isEmpty) {
+      finalExerciseData = exerciseData;
+    }
+
     return finalExerciseData;
   }
 }
