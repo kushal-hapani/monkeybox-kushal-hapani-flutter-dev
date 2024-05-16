@@ -1,16 +1,13 @@
-# workout_routines_app
+# Workout App
 
-A new Flutter project.
+Workout is an app for managing workout's session
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- The project is build on flutter version `3.19.6`.
+- To setup this projec on your machine just clone this project and run command `flutter pub get` in terminal.
+- Run the project on your preferable device.
 
-A few resources to get you started if this is your first Flutter project:
+## App Video
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- https://drive.google.com/file/d/10uc3-h-2JpkjZtzFHD8UK9bbet6rzHzl/view?usp=sharing
